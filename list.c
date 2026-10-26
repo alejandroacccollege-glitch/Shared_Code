@@ -49,28 +49,37 @@ Type list_get(List list, int position){
     return newNode -> data;
 }
 
-void list_set(List list, Type insertedData, int position){
+void list_insert(List list, Type insertedData, int position){
+    // 1.0 Esto representa el caso cuando la lista está vacía
     if (list -> size == 0){
-        Node newNode = (Node) malloc (sizeof(struct strNode)); 
+        Node newNode = (Node) malloc (sizeof(struct strNode));
         newNode -> data = insertedData;
         list -> first = newNode;
         list -> last = newNode;
         newNode -> prior = NULL;
         newNode -> next = NULL;
         list -> size ++;
-    } else {
-        if (position < 0 || position > list_size(list)) 
+    }
+    // 2.0 Esto representa cualquier otro caso
+    else
+    {
+        if (position < 0 || position > list_size(list))
         {
-        printf("Invalid position"); 
+        printf("Invalid position"); // Se revisa si la posición es válida
         } else {
+            // 2.1 Crea el nodo con el cual el dato insetado se podrá conectar en donde se inserte
             Node newNode = (Node) malloc (sizeof(struct strNode));
             newNode -> data = insertedData;
-            
+            // Este es el caso en el que se quiere ingresar en la primera posición
             if (position == 0) {
-            newNode ->prior = NULL;
-            newNode->next = list->first;
-            list->first->prior = newNode;
-            list->first = newNode;
+            newNode -> prior = NULL; // El anterior del nuevo dato apunta a nulo ya que queda al frente
+            newNode -> next = list -> first; // El siguiente del nuevo dato apunta al que antes era el primero para que el nuevo dato sea el primero
+            list -> first -> prior = newNode; // Ahora el que era el primero se recorre y ahora su anterior es el nodo del nuevo dato
+            //(El que era el primero deja de ser el primero)
+            list -> first = newNode; // Ahora el first se actualiza
+            list->size++;
+            }
+            else {
             Node currentNode = list -> first;
             for (int i = 0; i < position; i++){
                 currentNode = currentNode -> next;
@@ -78,7 +87,7 @@ void list_set(List list, Type insertedData, int position){
             newNode -> prior = currentNode;
             newNode -> next = currentNode -> next;
             currentNode -> next = newNode;
-            
+
             if (newNode->next != NULL) {
                 newNode->next->prior = newNode;
             } else {
@@ -86,8 +95,5 @@ void list_set(List list, Type insertedData, int position){
             }
             list -> size++;
         }
-        }
-    }   
+    }
 }
-
-
